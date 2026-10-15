@@ -1,0 +1,25 @@
+name: Documentation issue
+description: Report a problem with Atlas documentation or its scaffold
+title: "[Docs]: "
+labels: [documentation]
+body:
+  - type: markdown
+    attributes:
+      value: Please search existing issues first. Do not include secrets or private data.
+  - type: input
+    id: page
+    attributes:
+      label: Page or file
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What needs fixing?
+      description: Include the expected information and what is currently shown.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested correction
