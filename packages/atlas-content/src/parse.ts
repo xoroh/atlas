@@ -28,8 +28,13 @@ interface YamlErrorLike {
  * the options argument is typed as required to enforce this.
  */
 export function parseDocument(file: string, raw: string): ParseResult {
+  // Normalize line endings up front: identical logical content must parse
+  // and generate identically regardless of authoring platform or VCS
+  // checkout settings. Line counts (and hence diagnostic lines) are
+  // unaffected.
+  const normalized = raw.replace(/\r\n/g, "\n");
   try {
-    const parsed: ParsedFrontmatter = matter(raw, {});
+    const parsed: ParsedFrontmatter = matter(normalized, {});
     return { ok: true, data: parsed.data, body: parsed.content };
   } catch (error) {
     return { ok: false, diagnostics: [yamlDiagnostic(file, error)] };

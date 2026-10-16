@@ -1,5 +1,6 @@
 import { readdirSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { toSlug } from "@xoroh/atlas-core";
 
 /**
  * Recursively discover Markdown (`.md`) source files under `contentDir`.
@@ -34,12 +35,27 @@ function walk(root: string, dir: string): string[] {
 /**
  * Derive the document slug from a content-relative path: `index.md` is the
  * enclosing directory (`""` at the root), other files drop the extension.
+ *
+ * Defensive: path segments that could escape the output directory (`.`,
+ * `..`, empty segments from `//`, Windows `\` separators) are neutralized
+ * so slugs derived from hostile or bizarre filenames stay contained.
+ * Discovery never produces such segments; this only affects pathological
+ * names, never legitimate files.
  */
 export function slugForFile(relativePath: string): string {
-  const withoutExt = relativePath.replace(/\.md$/i, "");
-  if (withoutExt === "index") return "";
-  if (withoutExt.endsWith("/index")) return withoutExt.slice(0, -"/index".length);
-  return withoutExt;
+  const segments = relativePath
+    .replace(/\\/g, "/")
+    .replace(/\.md$/i, "")
+    .split("/")
+    .filter((seg) => seg !== "" && seg !== "." && seg !== "..");
+  if (segments.length === 0) {
+    // Degenerate name (e.g. `..md`): fall back to a slug of the raw name.
+    return toSlug(relativePath) || "untitled";
+  }
+  const joined = segments.join("/");
+  if (joined === "index") return "";
+  if (joined.endsWith("/index")) return joined.slice(0, -"/index".length);
+  return joined;
 }
 
 /** True when a content-relative path is covered by an exclude prefix list. */

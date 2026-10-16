@@ -30,6 +30,13 @@ describe("slugForFile / isExcluded", () => {
     expect(slugForFile("getting-started.md")).toBe("getting-started");
   });
 
+  test("neutralizes dot segments so slugs cannot escape the output dir", () => {
+    expect(slugForFile("..md")).toBe("md");
+    expect(slugForFile("...md")).toBe("md");
+    expect(slugForFile("a/../b.md")).toBe("a/b");
+    expect(slugForFile("a//b.md")).toBe("a/b");
+  });
+
   test("matches exact paths and prefixes", () => {
     expect(isExcluded("drafts/a.md", ["drafts"])).toBe(true);
     expect(isExcluded("drafts", ["drafts"])).toBe(true);
@@ -106,6 +113,20 @@ describe("extractHeadings", () => {
       { depth: 1, text: "Title", id: "title" },
       { depth: 2, text: "Real", id: "real" },
     ]);
+  });
+
+  test("deduplicates repeat heading ids", () => {
+    const headings = extractHeadings("# A\n\n# A\n\n## A\n");
+    expect(headings.map((h) => h.id)).toEqual(["a", "a-1", "a-2"]);
+  });
+
+  test("normalizes CRLF input to LF bodies", () => {
+    const result = parseDocument("c.md", "---\r\ntitle: T\r\ndescription: D\r\n---\r\n\r\nBody\r\n");
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.body).not.toContain("\r");
+      expect(result.body.trim()).toBe("Body");
+    }
   });
 });
 
