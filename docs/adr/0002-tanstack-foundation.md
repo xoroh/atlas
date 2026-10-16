@@ -1,12 +1,21 @@
 # ADR-0002: TanStack Start as the Atlas foundation
 
-- Status: accepted (owner-directed, 2026-10-16)
+- Status: **superseded by ADR-0003** (2026-10-16, owner-directed core-first
+  objective). TanStack Start as the immediate foundation is withdrawn; it
+  remains a candidate technology for a future Atlas website only. Atlas Core
+  must not depend on it.
 - Date: 2026-10-16
 - Deciders: repository owner. The framework decision is settled by owner
   direction and is not subject to re-confirmation; this ADR records it, its
   rationale, and its consequences.
 - Supersedes: ADR-0001 §D3 (Astro + Starlight). Carries forward ADR-0001
   §§D1, D2 (principle), D4, D5 (intent); see §2 below.
+
+> Historical note: the decision body below is preserved unchanged. It was
+> superseded before implementation began — no website migration was ever
+> started. Durable requirements (static-output verification discipline,
+> bounded spikes for undecided selections) carry forward via ADR-0003 and
+> `docs/migration-plan.md`.
 
 ## 1. Context
 

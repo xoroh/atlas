@@ -1,58 +1,60 @@
-# Implementation plan — TanStack Start migration
+# Implementation plan — Atlas Core (phases A–E)
 
-Follows `docs/migration-plan.md` phases. Starts only after the owner has
-reviewed the Phase-0 document set. The implementer works in `xoroh/atlas`
-only, on feature branches targeting `development`, for review via PR.
+Follows `docs/adr/0003-atlas-core-first.md` and `docs/target-architecture.md`.
+Work in `xoroh/atlas` only, on feature branches targeting `development`, for
+review via PR. No push/merge without owner authorization.
 
-## Workstreams and order
+## Phase A — Core contracts and package boundaries (done: this task)
 
-1. **Search spike** (migration Phase 1). Inputs: candidate list, evaluation
-   criteria (ADR-0002 §8). Output: selection + evidence matrix + pinned
-   versions. Blocks: search-UI and index wiring only — pipeline skeleton may
-   proceed behind the seam.
-2. **Scaffold** (Phase 2). TanStack Start + Router + Vite config with
-   prerender settings verified against the installed schema; `__root`,
-   layout, five routes, 404 route; theme/SEO shell; hosting (base-URL) seam.
-   Done when: static output serves locally with all five routes.
-3. **Content pipeline** (Phase 2–3). `lib/content.*`: inventory enumerator,
-   frontmatter schema + validator, navigation config + orphan check,
-   Markdown/sitemap/`manifest.json`/`llms.txt` generators. Done when:
-   gates 1, 6, 7 pass.
-4. **Content rewrite** (Phase 3). Five MDX pages ported to Atlas schema
-   (no Starlight frontmatter). Done when: rendered pages reviewed for
-   content fidelity; gate 9 parity items checked.
-5. **Search wiring** (Phase 3). Index build + UI slot per spike outcome.
-   Done when: gate 3 passes.
-6. **Assets/hosting validation** (Phase 3). Asset audit, 404 mechanism per
-   host docs, no-server proof, JS measurement. Done when: gates 4, 5, 8, 9
-   pass.
-7. **Cutover** (Phase 4). Ordered removal per migration plan; CI/test/docs
-   updates. Done when: CI green, gates re-run green.
-8. **Hygiene** (Phase 5). Changeset if warranted, CHANGELOG, consistency
-   pass.
+Minimum package graph (`atlas-core`, `atlas-content`, `atlas-build`),
+configuration model, document model, diagnostics shape, public entry
+points, dependency directions. Done when: manifests/exports/tsconfigs land,
+boundary tests pass, docs agree with the graph.
 
-Dependencies: 1 → 5; 2 → 3, 4, 6; 3 → 6; 4 → 6; 6 → 7 → 8. Workstreams 2–4
-can overlap once interfaces (route slugs, frontmatter schema, search seam)
-are agreed.
+## Phase B — Working engine (done: this task)
 
-## Definition of done (whole migration)
+First content-to-output vertical slice: config load → discovery → parse →
+validate → normalized representation → deterministic outputs
+(`manifest.json`, `llms.txt`, per-page Markdown), with unit tests per
+package and integration tests for the full lifecycle including invalid
+config, malformed frontmatter, missing metadata, and duplicate slugs.
+Done when: the slice runs end-to-end from fixtures with no website present
+and all tests pass under the required Bun version.
 
-All nine acceptance gates green, CI green, no Astro/Starlight remnants
-(`grep` clean for `astro`, `starlight` outside historical ADR text and this
-plan set), skill/READMEs/`llms.txt` accurate, lockfile diff reviewed,
-rollback path stated in the cutover PR.
+## Phase C — Developer experience (done: this task)
+
+Diagnostics quality (file/line/reason on every failure), small fixtures,
+root scripts (`test`, `check`), CI validating the engine (frozen install →
+tests → typecheck), package READMEs, and this plan set. Done when: a new
+contributor can install, test, and typecheck from the docs alone.
+
+## Phase D — Core stabilization (next)
+
+Validate package independence (each package's tests run in isolation),
+dependency direction (boundary test green), output determinism across
+machines, and fitness against Xoroh's actual documentation needs using real
+content samples. Harden diagnostics and edge cases found there. Done when:
+real content round-trips through the engine with no core changes required —
+or the required changes are scoped as new increments. **Next recommended
+increment:** run 2–3 real Xoroh documents through `loadDocuments` +
+`buildAtlas` and record gaps.
+
+## Phase E — Future consumers (only when Core is ready and needed)
+
+Evaluate a website, CLI, search, or other consumers per
+`docs/migration-plan.md` §3. None designed or built now.
+
+## Definition of done (this task, phases A–C)
+
+Vertical slice implemented and tested; boundary/determinism/failure tests
+green; `bun test` + typecheck pass; website scaffold removed coherently;
+CI validates the engine; docs, skill, and READMEs agree with the
+implementation; nothing published, deployed, or pushed.
 
 ## Explicitly out of scope
 
-New workspace packages; engine extraction; versioning/i18n content;
-API-reference generation; MCP/CLI; SSR/hosted runtimes; renaming
-`apps/docs`; Dependabot upgrades (separate PRs); changes to `xoroh/xoroh`
-or any other repository; Fumadocs references in product docs.
-
-## Notes to the implementer
-
-- Pin and record exact framework versions; cite installed-schema behavior,
-  not remembered docs.
-- Keep migration commits separate from maintenance commits.
-- If any gate proves unpassable with the chosen stack, stop and report —
-  do not weaken the gate silently.
+Replacement websites; new packages/adapters without justified need; MDX
+processing beyond the Markdown slice; search/themes/SEO/site hosting;
+publishing/releasing; changes outside `xoroh/atlas`; speculative
+abstractions; weakening any gate silently — unpassable gates are reported,
+not bypassed.

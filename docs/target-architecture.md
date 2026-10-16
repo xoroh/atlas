@@ -1,76 +1,71 @@
-# Target architecture — Xoroh Atlas on TanStack Start
+# Target architecture — Atlas Core engine
 
-Authoritative decisions: `docs/adr/0002-tanstack-foundation.md` (accepted,
-owner-directed). This document describes the resulting system; where it adds
-operational detail, the ADR prevails on any conflict.
+Authoritative decisions: `docs/adr/0003-atlas-core-first.md` (accepted,
+owner-directed; supersedes ADR-0002). ADR-0002's verification discipline
+(route inventories, no-backend proofs, bounded spikes) carries forward for
+future consumers. On any conflict, the ADR prevails.
 
-## System shape (v1)
+## System shape
 
-One TanStack Start application in `apps/docs`. No new workspace packages. No
-Atlas-hosted backend required: the production build is a self-contained
-static directory servable from any static host or CDN.
+Atlas Core is a set of Bun-workspace packages with one-way dependencies.
+No website, no framework runtime, no hosted backend in the immediate
+product.
 
 ```text
-apps/docs/
-  routes/            __root.tsx, index, getting-started,
-                     guides.architecture, guides.contributing,
-                     guides.governance, 404 (file-route names per
-                     TanStack Router conventions at implementation time)
-  content/docs/      rewritten MDX source (5 pages at cutover)
-  lib/content.*      inventory + frontmatter schema + navigation +
-                     llms.txt/manifest.json/Markdown generators
-  public/            favicons, fonts, other static assets
-  vite.config.ts     TanStack Start plugin, prerender config, hosting seam
+packages/atlas-core/       contracts: config model, document model,
+                           public types, diagnostics, lifecycle interfaces.
+                           Depends on: nothing (language runtime only).
+packages/atlas-content/    discovery, Markdown+frontmatter parsing,
+                           metadata validation, normalized representation.
+                           Depends on: atlas-core (+ frontmatter library).
+packages/atlas-build/      pipeline orchestration + deterministic output
+                           generation (manifest, llms.txt, per-page
+                           Markdown). Depends on: atlas-core, atlas-content.
 ```
 
-`packages/` stays an empty reservation (second consumer triggers engine
-extraction per ADR-0001 D1, not v1 scope).
+## Package rationale (one package per demonstrated responsibility)
 
-## Content pipeline
+- **atlas-core** exists so every present and future package shares one
+  configuration model, one document representation, and one diagnostic
+  shape — without inheriting parsing or generation behavior. Zero runtime
+  dependencies keeps it stable and trivially testable.
+- **atlas-content** exists because file discovery, Markdown parsing, and
+  metadata validation change together and for different reasons than
+  contracts. It owns everything about turning files into validated
+  `AtlasDocument`s and nothing about outputs.
+- **atlas-build** exists because orchestration (load → discover → validate →
+  generate) and output formats change for consumer-driven reasons,
+  independent of parsing. It owns the end-to-end lifecycle and generated
+  artifacts, and nothing about parsing.
+- **Not created:** MDX adapter (no justified requirement; Markdown suffices
+  for the slice), search package (future consumer concern), theme/SEO/site
+  packages (presentation belongs to consumers), engine-extraction packages
+  beyond these three (no second engine consumer exists).
 
-MDX files in-repo → Atlas-owned parsing/validation → route inventory →
-prerendered HTML + navigation + search index + AI artifacts. Stages:
+## Content pipeline (the vertical slice)
 
-1. **Author** in `content/docs/` under the Atlas frontmatter schema
-   (`title`, `description` required; navigation weight/order optional).
-2. **Validate** at build/test time: schema conformance, every inventoried
-   route reachable from navigation or explicitly unlisted, no orphans.
-3. **Generate**: static HTML per route, sidebar/navigation data, search
-   index (format per search-spike outcome), `llms.txt`, per-page Markdown,
-   `manifest.json` (routes, versions, maturity), sitemap.
-4. **Verify** via the acceptance gates in `docs/migration-plan.md`.
+Configuration → discovery (`.md` files under a content directory) →
+frontmatter parsing → metadata validation (required `title`,
+`description`; duplicate-slug and orphan detection) → normalized
+`AtlasDocument` (slug, metadata, body, extracted headings) → deterministic
+outputs: `manifest.json` (routes, titles, maturity), `llms.txt` (index),
+per-page Markdown. Every stage reports structured diagnostics; invalid
+configuration or content fails loudly with file, line, and reason.
 
-## Rendering and deployment model
+## What stays internal vs public
 
-Prerendered HTML-first; hydration bounded to interactive elements (theme
-toggle, search UI, nav state); route-level code-splitting. Hosting provider
-and canonical URL remain TBD behind a config/env seam — nothing hardcoded.
-First deploy re-verifies host-specific 404 semantics against the host's
-documented behavior.
+Public: config loader, document loader, pipeline entry, output writers,
+all types/diagnostics needed to consume them. Internal: heading
+extraction details, file-walk mechanics, output string templates —
+exposed only through their tested public functions until a consumer needs
+otherwise.
 
-## Cross-cutting behavior
+## Boundaries
 
-- **Navigation/discoverability:** Atlas-owned sidebar config; full
-  route inventory with completeness tests; sitemap.
-- **SEO:** per-page metadata, semantic HTML, canonical URLs via seam.
-- **Accessibility:** readable with no JS; keyboard-navigable; theme honors
-  `prefers-color-scheme`; persisted preference.
-- **Themes:** light/dark CSS, no-JS fallback default.
-- **404/errors:** designed 404 route + host-validated static mechanism.
-- **AI/LLM:** generated `llms.txt`, per-page Markdown, `manifest.json`;
-  MCP/CLI deferred until a real consumer exists.
-- **Search:** behind a narrow seam (index-build step + UI slot); concrete
-  implementation chosen by the bounded spike, recorded before it ships.
-
-## Explicit non-goals for v1
-
-Second packages, engine extraction, versioned snapshots, i18n content,
-API-reference generation, search-service backends, MCP/CLI, SSR or
-Atlas-hosted runtimes, framework-neutral abstraction layers.
-
-## Evolution path (no premature building)
-
-Second consumer → extract `packages/atlas-engine` behind the D1
-configuration seam. Versioning/i18n → reserved URL prefixes (ADR-0001 D4)
-with independent justification. Each future capability needs a real consumer
-and its own cost justification.
+- Engine packages never import Astro, Starlight, TanStack Start, React, or
+  any rendering framework — enforced by a checked test.
+- The engine produces validated documents and outputs; future consumers
+  decide presentation and deployment (static sites, search indexes, SEO
+  artifacts, CLIs, agent workflows — roadmap Phase E, none implemented now).
+- Determinism: identical inputs produce byte-identical outputs (verified by
+  test); builds are reproducible from a frozen lockfile.

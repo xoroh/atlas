@@ -1,46 +1,36 @@
-# Roadmap — Xoroh Atlas
+# Roadmap — Xoroh Atlas (core-first)
 
-Ordering is by dependency and exit criteria, not calendar dates. No milestone
-is scheduled until its prerequisites are met; no milestone is skipped.
+Ordering is by dependency and exit criteria, not calendar dates. No phase
+is scheduled until its prerequisites are met; no phase is skipped.
 
-## M0 — Foundation record (this task)
+## Phase A — Core contracts and package boundaries ✅ (this task)
 
-ADRs corrected and established (0001 corrected, 0002 accepted), planning
-docs written (`repository-audit`, `target-architecture`, `migration-plan`,
-`implementation-plan`, this roadmap), agent instructions and stale
-governance text corrected. **Exit:** owner reviews the document set.
-No code, dependency, or deployment change.
+Package graph, config/document/diagnostic contracts, public entry points,
+dependency directions, boundary tests.
 
-## M1 — Search selection + scaffold
+## Phase B — Working engine ✅ (this task)
 
-Search spike concluded and recorded; TanStack Start app scaffolded
-side-by-side with a servable static build of stub routes; route inventory
-matches content. **Exit:** migration-plan Phase 1–2 gates pass. Astro app
-untouched.
+Content-to-output vertical slice with unit + integration tests, success and
+failure cases, deterministic outputs, no website required.
 
-## M2 — Verified replacement
+## Phase C — Developer experience ✅ (this task)
 
-Content rewritten, all nine acceptance gates pass, JS budgets measured and
-documented, parity checklist signed off in the migration PR. **Exit:**
-reviewer approves; cutover authorized. Astro app still present (rollback
-intact).
+Diagnostics, fixtures, root scripts, engine-validating CI, package docs.
 
-## M3 — Cutover
+## Phase D — Core stabilization (next)
 
-Ordered Astro removal complete; CI green on the final tree; gates re-run
-green; hygiene (changeset if warranted, CHANGELOG, consistency pass) done.
-**Exit:** `development` is TanStack-only with a clean `grep` for framework
-remnants. Rollback thereafter is `git revert`.
+Package independence, determinism across machines, and fitness against real
+Xoroh content. Next increment: round-trip 2–3 real documents and record
+gaps. Consumers still out of scope.
 
-## M4 — Post-v1 evolution (as real requirements emerge)
+## Phase E — Future consumers (only when Core is ready and needed)
 
-Search hardening from usage; hosting selection finalized with host-verified
-404 semantics; second consumer → engine extraction; versioning/i18n via
-reserved URL design; API-reference generation; MCP/CLI programmatic access.
-Each item needs its own consumer and cost justification — none is designed
-or built in v1.
+Website (TanStack Start is a candidate technology, not a selection), CLI,
+search, SEO/site artifacts, agent workflows — evaluated per
+`docs/migration-plan.md` §3 when a real need names them.
 
 ## Non-roadmap items (explicitly excluded)
 
-Framework re-selection (decided: ADR-0002), `apps/docs` renaming, new v1
-packages, Dependabot upgrades (handled as separate maintenance).
+Website migration or replacement, `apps/docs` restoration, new packages
+without justified need, publishing/releasing, Dependabot upgrades (separate
+maintenance), framework re-selection.
