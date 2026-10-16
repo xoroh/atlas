@@ -17,7 +17,7 @@ failure cases, deterministic outputs, no website required.
 
 Diagnostics, fixtures, root scripts, engine-validating CI, package docs.
 
-## Phase D — Core stabilization (in progress: realistic-corpus validation ✅)
+## Phase D — Core stabilization ✅ (closed; deferred items listed below)
 
 Validated end to end with `packages/atlas-content/fixtures/realistic/`
 (3 documents: root + nested + CRLF-authored) through the public
@@ -32,13 +32,13 @@ Validated end to end with `packages/atlas-content/fixtures/realistic/`
 - Defects corrected: setext headings dropped; indented ATX dropped;
   `writeOutputs` could escape `outDir` on hostile page paths (now throws).
 - Known limitations (not defects): blockquote-prefixed headings not
-  extracted; slugs case-sensitive; links unresolved by design; empty
-  corpus builds zero pages successfully (warn-vs-error is an owner
-  decision — see below).
-- Still unverified: fitness against real Xoroh content (needs authorized
-  source documents); determinism across machines (single-machine only).
-- Owner decisions required before Phase E: empty-corpus severity
-  (warning vs error); nothing else new.
+  extracted; slugs case-sensitive; links unresolved by design; publishing
+  and external installation untested (packages remain private).
+- Still unverified: fitness against real consumer Markdown content (needs
+  an authorized source); determinism across machines (single-machine only).
+- Owner decisions settled in closeout: empty corpus succeeds with a
+  deterministic warning (`BuildResult.warnings`); no further Phase D
+  decisions outstanding.
 
 ## Phase D closeout (evidence record)
 

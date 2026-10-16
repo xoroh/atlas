@@ -13,11 +13,11 @@ bun install --frozen-lockfile
 bun test
 ```
 
-Documentation framework and publishing choices are intentionally not set yet. Keep contributions framework-neutral until that direction is agreed.
+Documentation framework choices follow `docs/adr/0003-atlas-core-first.md`: a framework-independent engine with Markdown sources. Keep contributions within that direction until the owner agrees a new one.
 
 ## Pull requests
 
-- Branch from `development` and target pull requests at `development`.
+- Branch from `main` and target pull requests at `main`.
 - Keep changes focused and explain the problem they solve.
 - Add or update tests and documentation when behavior or setup changes.
 - Do not include secrets, credentials, or private user data.

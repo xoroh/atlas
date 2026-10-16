@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Atlas has not published a release yet. Until then, security reports should target the current `development` branch.
+Atlas has not published a release yet. Until then, security reports should target the current `main` branch.
 
 ## Reporting a vulnerability
 

@@ -63,7 +63,7 @@ a site is a future consumer project, not the foundation (see
 ## Boundaries
 
 Stop and request explicit authorization before: releases, tags, publication,
-deployments, merges, pushes to `development`, settings changes, secrets
+deployments, merges, pushes to `main` or `development`, settings changes, secrets
 handling, or accessing other repositories (Kern, Axis, or any other).
 Unresolved owner decisions (maintainers, hosting, external adopters) stay
 open — record them, do not decide them.

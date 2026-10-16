@@ -48,3 +48,18 @@ selected), CLI, search, or agent workflow is evaluated against:
   anything not yet proven (search selection, prerender behavior).
 
 No consumer work begins before these conditions hold.
+
+### Recorded boundary: Kern (evaluated, no integration)
+
+A read-only gap analysis against Kern (Xoroh's design-system site) found a
+structural mismatch, not a feature gap: Kern authors structured TypeScript
+records and TSX routes and already generates its own manifest, grammar-aware
+per-page Markdown, nav-sectioned `llms.txt`, MCP index, search, and ~24
+domain gates. Atlas discovers Markdown and emits generic artifacts; its
+contracts cannot represent Kern's records without lossy flattening, and its
+outputs serve different schemas and purposes. Decision: Atlas stays
+independent; Kern retains its records, generators, navigation, search, and
+gates. No Kern adapter is built. If consolidation is ever revisited, the
+proven procedure is a Kern-side serializer to `AtlasDocument` piloted on one
+foundations page, accepted only on parity with Kern's own page/MCP checks —
+with the standing evidence that it will fail on metadata fidelity.

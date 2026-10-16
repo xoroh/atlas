@@ -1,7 +1,7 @@
 # Implementation plan — Atlas Core (phases A–E)
 
 Follows `docs/adr/0003-atlas-core-first.md` and `docs/target-architecture.md`.
-Work in `xoroh/atlas` only, on feature branches targeting `development`, for
+Work in `xoroh/atlas` only, on feature branches targeting `main`, for
 review via PR. No push/merge without owner authorization.
 
 ## Phase A — Core contracts and package boundaries (done: this task)
