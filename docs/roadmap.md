@@ -40,6 +40,27 @@ Validated end to end with `packages/atlas-content/fixtures/realistic/`
 - Owner decisions required before Phase E: empty-corpus severity
   (warning vs error); nothing else new.
 
+## Phase D closeout (evidence record)
+
+- Empty-corpus policy implemented per owner decision: valid empty or
+  fully-excluded corpus succeeds with a deterministic, actionable warning
+  (`BuildResult.warnings`); missing dirs and invalid content stay errors.
+  Regression tests in `pipeline.test.ts` ("empty corpus").
+- Revalidated: realistic corpus end to end (manifest, `llms.txt`, pages,
+  ordering, diagnostics, byte-identical rebuilds/rewrites); full suite
+  and strict typecheck green under Bun 1.4.3.
+- Portability review performed on Linux only: code-unit ordering
+  (locale-independent; suite green under `LC_ALL=C` and `C.UTF-8`),
+  separator/`..` containment, CRLF normalization, Unicode anchor folding,
+  timestamp-free and path-leak-free artifacts (probed, none found).
+  No second OS or machine was available: **cross-machine determinism is
+  supported by design and local evidence, not proven by comparison.**
+- No actual Xoroh documents were supplied or authorized for this task;
+  real-content validation remains outstanding by owner action, not by
+  engine readiness. The realistic fixtures stand as the current evidence.
+- No defects found in this pass beyond the implemented decision; no scope
+  expansion (no search/navigation/MDX/CLI/website).
+
 Consumers remain out of scope.
 
 ## Phase E — Future consumers (only when Core is ready and needed)

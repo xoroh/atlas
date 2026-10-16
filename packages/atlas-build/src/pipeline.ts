@@ -10,7 +10,13 @@ export type { GeneratedOutputs, GeneratedPage, AtlasManifest, ManifestRoute } fr
 export { buildOutputs, pagePath, routePath } from "./outputs.js";
 
 export type BuildResult =
-  | { readonly ok: true; readonly documents: AtlasDocument[]; readonly outputs: GeneratedOutputs }
+  | {
+      readonly ok: true;
+      readonly documents: AtlasDocument[];
+      readonly outputs: GeneratedOutputs;
+      /** Non-blocking warnings (e.g. empty corpus). Empty when there are none. */
+      readonly warnings: AtlasDiagnostic[];
+    }
   | { readonly ok: false; readonly diagnostics: AtlasDiagnostic[] };
 
 /**
@@ -27,7 +33,8 @@ export function buildAtlas(configInput: unknown): BuildResult {
   if (diagnostics.some((d) => d.severity === "error")) {
     return { ok: false, diagnostics };
   }
-  return { ok: true, documents, outputs: buildOutputs(config, documents) };
+  const warnings = diagnostics.filter((d) => d.severity === "warning");
+  return { ok: true, documents, outputs: buildOutputs(config, documents), warnings };
 }
 
 export interface WrittenOutputs {

@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { AtlasDiagnostic, AtlasDocument } from "@xoroh/atlas-core";
+import { hasErrors } from "@xoroh/atlas-core";
 import { discoverDocuments, isExcluded, slugForFile } from "./discover.js";
 import { parseDocument } from "./parse.js";
 import { validateMeta } from "./validate.js";
@@ -77,5 +78,14 @@ export function loadDocuments(contentDir: string, exclude?: readonly string[]): 
     const orderB = b.meta.order ?? Number.POSITIVE_INFINITY;
     return orderA - orderB || (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0);
   });
+
+  if (documents.length === 0 && !hasErrors(diagnostics)) {
+    diagnostics.push({
+      severity: "warning",
+      message:
+        `No documents discovered in "${contentDir}". ` +
+        "Check the content directory, file patterns (*.md), and exclusion rules.",
+    });
+  }
   return { documents, diagnostics };
 }

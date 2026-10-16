@@ -90,6 +90,58 @@ describe("buildAtlas lifecycle", () => {
   });
 });
 
+describe("empty corpus", () => {
+  test("a valid empty directory succeeds with an actionable warning", () => {
+    const empty = tempDir();
+    const first = buildAtlas({ title: "Atlas", contentDir: empty });
+    expect(first.ok).toBe(true);
+    if (!first.ok) return;
+
+    expect(first.documents).toEqual([]);
+    expect(first.warnings).toHaveLength(1);
+    expect(first.warnings[0]?.severity).toBe("warning");
+    expect(first.warnings[0]?.message).toContain("No documents discovered");
+    expect(first.warnings[0]?.message).toContain("exclusion rules");
+    const manifest = JSON.parse(first.outputs.manifest) as { routes: unknown[] };
+    expect(manifest.routes).toEqual([]);
+
+    // Deterministic: same input, same warning and outputs.
+    const second = buildAtlas({ title: "Atlas", contentDir: empty });
+    expect(second.ok).toBe(true);
+    if (!second.ok) return;
+    expect(second.warnings).toEqual(first.warnings);
+    expect(JSON.stringify(second.outputs)).toBe(JSON.stringify(first.outputs));
+  });
+
+  test("a non-empty corpus produces no warning", () => {
+    const result = buildAtlas({ title: "Atlas", contentDir: validDir });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.warnings).toEqual([]);
+  });
+
+  test("an excluded-only corpus warns instead of failing", () => {
+    const result = buildAtlas({
+      title: "Atlas",
+      contentDir: join(contentFixtures, "realistic-excluded"),
+      exclude: ["keep.md", "drafts"],
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.documents).toEqual([]);
+    expect(result.warnings).toHaveLength(1);
+    expect(result.warnings[0]?.severity).toBe("warning");
+  });
+
+  test("inaccessible input stays an error, not a warning", () => {
+    const result = buildAtlas({ title: "Atlas", contentDir: join(tempDir(), "missing") });
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.diagnostics.length).toBeGreaterThan(0);
+    expect(result.diagnostics.every((d) => d.severity === "error")).toBe(true);
+  });
+});
+
 describe("writeOutputs", () => {
   test("writes manifest, index, and pages, byte-identical across runs", () => {
     const result = buildAtlas({ title: "Atlas", contentDir: validDir });

@@ -12,3 +12,7 @@ Notable changes to Atlas will be documented here.
 - Validate the engine against a realistic corpus (Phase D): fix dropped
   setext/indented headings and `writeOutputs` directory containment;
   document verbatim link pass-through.
+- Close out Phase D: empty corpus succeeds with a deterministic warning
+  (`BuildResult.warnings`); portability review on Linux (ordering,
+  containment, CRLF, Unicode, leak-free artifacts); cross-machine
+  comparison and real Xoroh documents outstanding.
