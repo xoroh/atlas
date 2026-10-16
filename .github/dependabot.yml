@@ -6,3 +6,10 @@ updates:
       interval: weekly
       day: monday
       time: "04:00"
+  # The lockfile carries dependencies (changesets now, site toolchain next).
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:00"

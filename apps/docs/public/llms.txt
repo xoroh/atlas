@@ -1,0 +1,18 @@
+# Xoroh Atlas
+
+> Reusable documentation platform for the Xoroh ecosystem. This index is a
+> static starting point; a generated manifest follows when versioned
+> documentation exists.
+
+## Sites
+
+- / — Introduction: what Atlas is and is not.
+- /getting-started/ — install, develop, validate.
+- /guides/contributing/ — contribution rules.
+- /guides/governance/ — maintenance and decisions.
+- /guides/architecture/ — engine/site boundary and content model.
+
+## Source
+
+Canonical content lives in `apps/docs/src/content/docs/` of
+https://github.com/xoroh/atlas (`development` branch until release).

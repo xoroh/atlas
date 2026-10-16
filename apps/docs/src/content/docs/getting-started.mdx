@@ -1,0 +1,45 @@
+---
+title: Getting started
+description: Install dependencies, run the docs site locally, and validate changes.
+---
+
+## Prerequisites
+
+- [Bun](https://bun.sh) 1.4.2 or newer.
+
+## Install and run
+
+```sh
+git clone https://github.com/xoroh/atlas.git
+cd atlas
+bun install --frozen-lockfile
+bun test
+```
+
+Develop the documentation site with live reload:
+
+```sh
+bun --filter @xoroh/atlas-docs run dev
+```
+
+Validate exactly as CI does:
+
+```sh
+bun test
+bun --filter @xoroh/atlas-docs run check
+bun --filter @xoroh/atlas-docs run build
+```
+
+## Repository layout
+
+- `apps/docs/` — this documentation site (Astro + Starlight configuration
+  plus Markdown/MDX content).
+- `packages/` — reserved for distributable documentation tooling. Nothing
+  lives here until a real consumer needs it.
+- `docs/adr/` — architecture decisions, starting with the initial platform
+  direction.
+
+## Next steps
+
+Read the [architecture guide](/guides/architecture/) for the engine/site
+boundary, then the [contributing guide](/guides/contributing/).

@@ -1,0 +1,32 @@
+---
+title: Contributing
+description: How to contribute to Atlas.
+---
+
+Atlas is an early-stage open-source documentation project. For a substantial
+change, open an issue first so its scope can be discussed.
+
+## Development setup
+
+Requirements: Bun 1.4.2 or newer.
+
+```sh
+git clone https://github.com/xoroh/atlas.git
+cd atlas
+bun install --frozen-lockfile
+bun test
+```
+
+Documentation framework and publishing choices follow
+[`docs/adr/0001-atlas-foundation.md`](https://github.com/xoroh/atlas/blob/development/docs/adr/0001-atlas-foundation.md).
+Keep contributions consistent with the recorded decisions.
+
+## Pull requests
+
+- Branch from `development` and target pull requests at `development`.
+- Keep changes focused and explain the problem they solve.
+- Add or update tests and documentation when behavior or setup changes.
+- Validate with `bun test`, `astro check`, and a production build before
+  requesting review.
+- Do not include secrets, credentials, or private user data.
+- Preserve the repository's MIT license and any third-party notices.

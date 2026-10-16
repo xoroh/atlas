@@ -2,20 +2,25 @@
 
 Atlas is Xoroh's open-source documentation project, organized as a Bun workspace monorepo.
 
-> **Status:** This repository currently contains the project scaffold only. The documentation framework, content model, and site implementation have not been selected or added yet.
+> **Status:** Early implementation. `apps/docs` is a working Astro + Starlight
+> documentation site; reusable engine extraction (`packages/`) waits for a
+> second consumer. See `docs/adr/0001-atlas-foundation.md` for the recorded
+> architecture decisions.
 
 ## Workspace layout
 
-- `apps/docs/` — the planned documentation site
+- `apps/docs/` — the Xoroh Atlas documentation site (Astro + Starlight)
 - `packages/*` — future shared documentation tooling or components
 
 ## Development
 
-Requirements: Bun 1.3.8 or newer.
+Requirements: Bun 1.4.2 or newer.
 
 ```sh
 bun install --frozen-lockfile
 bun test
+bun run check
+bun run build
 ```
 
 ## Community

@@ -1,0 +1,23 @@
+---
+title: Architecture
+description: Engine/site boundary, content model, and recorded decisions.
+---
+
+Atlas separates a reusable documentation **engine** from project-specific
+**sites**. Configuration and plugins are the only extension mechanism; sites
+never patch engine internals.
+
+- **Content model:** file-based MDX in the repository, organized with
+  Starlight content collections.
+- **Sites:** `apps/docs` holds this site's configuration and content. Future
+  sites follow the same shape with their own branding.
+- **URLs:** `/v/{version}` and locale prefixes are reserved for future
+  versions and localization. The initial release ships one version, one
+  locale, with no routing complexity for either.
+- **AI surfaces:** this site ships a static `llms.txt`. A manifest,
+  MCP server, and CLI wait for a real consumer.
+
+The full rationale, alternatives, and trade-offs are recorded in
+[`docs/adr/0001-atlas-foundation.md`](https://github.com/xoroh/atlas/blob/development/docs/adr/0001-atlas-foundation.md).
+The engine stays inside `apps/docs` until a second site or consumer justifies
+extracting `packages/atlas-engine`.
