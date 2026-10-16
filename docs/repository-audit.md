@@ -9,8 +9,10 @@
 
 ## Identity
 
-Public MIT Bun workspace monorepo, org `xoroh`, default branch
-`development`. Open maintenance: Dependabot PR #1 (`actions/checkout`
+Public MIT Bun workspace monorepo, org `xoroh`. At audit time (2026-10-16)
+the default branch was `development`; the engine workstream has since
+consolidated to `main`, which is now the canonical and default branch.
+Open maintenance: Dependabot PR #1 (`actions/checkout`
 4→7, CI green) and PR #4 (TypeScript 5.9.3→7.0.2 — kept separate from
 engine work; merging it is a standalone maintenance decision).
 
