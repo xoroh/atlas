@@ -4,7 +4,7 @@ Atlas is an early-stage open-source documentation project. For a substantial cha
 
 ## Development setup
 
-Requirements: Bun 1.3.8 or newer.
+Requirements: Bun 1.4.2 or newer.
 
 ```sh
 git clone https://github.com/xoroh/atlas.git
