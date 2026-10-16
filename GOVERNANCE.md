@@ -4,4 +4,4 @@ Atlas is maintained by the [Xoroh organization](https://github.com/xoroh). Issue
 
 For substantial changes, open an issue before implementation. Maintainers review contributions for project fit, correctness, security, and MIT-compatibility. Pull requests target `development`; maintainers decide when changes are ready for release.
 
-The documentation framework and publishing model are not yet decided. This document will be updated when those decisions are made.
+The documentation framework is TanStack Start, recorded in `docs/adr/0002-tanstack-foundation.md` (which supersedes the unapproved Astro + Starlight selection in ADR-0001). The publishing model (hosting provider and site URL) is not yet decided and stays behind a configuration seam until it is.

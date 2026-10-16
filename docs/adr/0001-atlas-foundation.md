@@ -1,9 +1,33 @@
 # ADR-001: Atlas initial platform direction
 
-- Status: accepted
+- Status: partially superseded (see Correction below; framework choice
+  withdrawn by ADR-0002)
 - Date: 2026-10-16
 - Deciders: implementation task for `xoroh/atlas` Phase 0–1 (owner direction
   from the readiness audit; framework choice evidence-backed by spike below).
+- Correction: 2026-10-16 (owner direction — TanStack Start, recorded in
+  ADR-0002).
+
+## Correction (2026-10-16)
+
+The framework selection in D3 (Astro + Starlight) was recorded above as
+`accepted` without the owner's approval. The owner has directed that Atlas
+use TanStack Start instead. The historical record is preserved unchanged;
+only its standing is corrected:
+
+- **D3 (Framework: Astro + Starlight) is withdrawn** and superseded by
+  [ADR-0002](0002-tanstack-foundation.md). The spike evidence in D3 remains
+  valid as a measurement of the Astro/Starlight implementation, not as a
+  justification for keeping it.
+- **D1 (engine/site boundary, deferred extraction), D2 (file-based MDX
+  in-repo), D4 (`/v/{version}` and locale URL reservations), and D5 (static
+  AI surfaces first; MCP/CLI deferred) remain valid** and are carried forward
+  by ADR-0002. D2's mechanism changes (Starlight content collections are
+  replaced by an Atlas-owned pipeline); its principle does not.
+- The Astro + Starlight application in `apps/docs` is therefore a legacy
+  implementation pending migration, not the approved architecture. It is
+  preserved unchanged until the replacement passes its acceptance gates (see
+  `docs/migration-plan.md`).
 
 ## Context
 
