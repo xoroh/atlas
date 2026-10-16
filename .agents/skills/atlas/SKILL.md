@@ -48,3 +48,28 @@ deployments, merges, pushes to `development`, settings changes, secrets
 handling, or accessing other repositories (Kern, Axis, or any other).
 Unresolved owner decisions (maintainers, hosting, external adopters) stay
 open — record them, do not decide them.
+
+## Xoroh standards audit entry point
+
+On requests like "audit this repository against Xoroh standards", run an
+on-demand audit (read-only by default) using the central `repository-audit`
+procedure:
+
+1. Identify this repository and read `ADOPTED_STANDARDS.md`: source repo,
+   tag/SHA pin, adopted files, date, validation history.
+2. Determine the baseline: **pinned-baseline audit** (compliance against the
+   recorded pin — always possible locally) versus **latest-standards audit**
+   (compliance against the current central revision — needs access to an
+   up-to-date `xoroh/xoroh` checkout; report which one was performed).
+3. Check: root `AGENTS.md` accuracy and this skill's discoverability; this
+   skill's accuracy and boundaries; `apps/`/`packages/` structure;
+   toolchain, CI, and permissions; secret handling; release procedure;
+   provenance accuracy (pin still matches adopted files); independence
+   (builds and runs without the central repo); broken refs and stale text.
+4. Apply only applicable requirements — never demand every directory,
+   framework, or feature.
+5. Classify findings: compliant / noncompliant / partial / blocked /
+   exception / owner-decision-required / recommendation / not-applicable,
+   each with standard, evidence, impact, next action.
+6. Standardization needs explicit scope and follows
+   `cross-repo-standardization` — never modify as part of the audit.
