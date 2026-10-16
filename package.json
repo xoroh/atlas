@@ -15,11 +15,12 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "test": "bun test",
-    "dev": "bun run --filter '@xoroh/atlas-docs' dev",
-    "build": "bun run --filter '@xoroh/atlas-docs' build",
-    "check": "bun run --filter '@xoroh/atlas-docs' check"
+    "check": "bun run --filter '@xoroh/*' check"
   },
   "devDependencies": {
-    "@changesets/cli": "^3.0.3"
+    "@changesets/cli": "^3.0.3",
+    "@types/node": "^26.6.5",
+    "bun-types": "^1.4.3",
+    "typescript": "^5.9.0"
   }
 }
