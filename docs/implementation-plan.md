@@ -28,16 +28,14 @@ root scripts (`test`, `check`), CI validating the engine (frozen install →
 tests → typecheck), package READMEs, and this plan set. Done when: a new
 contributor can install, test, and typecheck from the docs alone.
 
-## Phase D — Core stabilization (next)
+## Phase D — Core stabilization (closed; see `docs/roadmap.md` evidence)
 
-Validate package independence (each package's tests run in isolation),
-dependency direction (boundary test green), output determinism across
-machines, and fitness against Xoroh's actual documentation needs using real
-content samples. Harden diagnostics and edge cases found there. Done when:
-real content round-trips through the engine with no core changes required —
-or the required changes are scoped as new increments. **Next recommended
-increment:** run 2–3 real Xoroh documents through `loadDocuments` +
-`buildAtlas` and record gaps.
+Stabilization was completed against the realistic fixture corpus and
+closed out with the empty-corpus policy: package independence, dependency
+direction, and output determinism are covered by the checked test suite.
+Real-content round-trips and cross-machine comparison remain explicitly
+deferred follow-ups for a future consumer phase — they were not completed
+and must not be claimed as done.
 
 ## Phase E — Future consumers (only when Core is ready and needed)
 

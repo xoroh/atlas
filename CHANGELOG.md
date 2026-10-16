@@ -16,3 +16,8 @@ Notable changes to Atlas will be documented here.
   (`BuildResult.warnings`); portability review on Linux (ordering,
   containment, CRLF, Unicode, leak-free artifacts); cross-machine
   comparison and real Xoroh documents outstanding.
+- Consolidate the engine workstream to `main` (`9dd6f7a`): 47 tests
+  passing, strict typecheck clean, remote CI green on the consolidated
+  commit (2026-10-16). External package installation, publishing, and
+  real-consumer validation remain deferred and unproven; nothing was
+  published, tagged, or released.
