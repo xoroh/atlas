@@ -9,3 +9,6 @@ Notable changes to Atlas will be documented here.
   the tested Atlas Core engine packages (`atlas-core`, `atlas-content`,
   `atlas-build`) and remove the Astro + Starlight website scaffold
   (`apps/docs`; prose preserved in git history).
+- Validate the engine against a realistic corpus (Phase D): fix dropped
+  setext/indented headings and `writeOutputs` directory containment;
+  document verbatim link pass-through.

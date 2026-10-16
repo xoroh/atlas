@@ -18,6 +18,12 @@ outputs.
 - Frontmatter schema: required non-empty `title` / `description`;
   optional `order` (finite number ≥ 0), `maturity` (`draft` (default) |
   `stable` | `deprecated`).
+- Headings: ATX (`#`, up to 3 leading spaces) and single-line setext
+  (`===`/`---` underlines) are extracted with unique anchor ids; fenced
+  code is never scanned. Blockquote-prefixed headings are not extracted.
+- Links: Markdown link syntax passes through verbatim. Atlas v1 does not
+  resolve, rewrite, or validate links — link checking belongs to a future
+  consumer.
 
 ## Notes
 

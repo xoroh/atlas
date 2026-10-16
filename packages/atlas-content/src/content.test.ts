@@ -120,6 +120,22 @@ describe("extractHeadings", () => {
     expect(headings.map((h) => h.id)).toEqual(["a", "a-1", "a-2"]);
   });
 
+  test("supports setext headings and indented ATX, not thematic breaks", () => {
+    const headings = extractHeadings(
+      "Big\n===\n\nSmall\n---\n\n  ## Indented\n\n    # Code, not a heading\n\n***\n",
+    );
+    expect(headings).toEqual([
+      { depth: 1, text: "Big", id: "big" },
+      { depth: 2, text: "Small", id: "small" },
+      { depth: 2, text: "Indented", id: "indented" },
+    ]);
+  });
+
+  test("ignores setext underlines after lists, quotes, and bare punctuation", () => {
+    const headings = extractHeadings("- item\n---\n\n> quoted\n===\n\n---\n\ntext\n===\n");
+    expect(headings).toEqual([{ depth: 1, text: "text", id: "text" }]);
+  });
+
   test("normalizes CRLF input to LF bodies", () => {
     const result = parseDocument("c.md", "---\r\ntitle: T\r\ndescription: D\r\n---\r\n\r\nBody\r\n");
     expect(result.ok).toBe(true);

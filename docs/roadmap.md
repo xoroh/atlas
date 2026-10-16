@@ -17,11 +17,30 @@ failure cases, deterministic outputs, no website required.
 
 Diagnostics, fixtures, root scripts, engine-validating CI, package docs.
 
-## Phase D — Core stabilization (next)
+## Phase D — Core stabilization (in progress: realistic-corpus validation ✅)
 
-Package independence, determinism across machines, and fitness against real
-Xoroh content. Next increment: round-trip 2–3 real documents and record
-gaps. Consumers still out of scope.
+Validated end to end with `packages/atlas-content/fixtures/realistic/`
+(3 documents: root + nested + CRLF-authored) through the public
+`loadDocuments`/`buildAtlas`/`writeOutputs` APIs:
+
+- Supported and tested: ordering, maturities, nested slugs, Unicode and
+  punctuation heading anchors, repeat-anchor dedup, setext and indented
+  headings, fenced-code exclusion, CRLF normalization, verbatim link
+  pass-through, excludes, duplicate/invalid detection with file-scoped
+  diagnostics, manifest/`llms.txt`/page accuracy, byte-identical rebuilds,
+  output-directory containment.
+- Defects corrected: setext headings dropped; indented ATX dropped;
+  `writeOutputs` could escape `outDir` on hostile page paths (now throws).
+- Known limitations (not defects): blockquote-prefixed headings not
+  extracted; slugs case-sensitive; links unresolved by design; empty
+  corpus builds zero pages successfully (warn-vs-error is an owner
+  decision — see below).
+- Still unverified: fitness against real Xoroh content (needs authorized
+  source documents); determinism across machines (single-machine only).
+- Owner decisions required before Phase E: empty-corpus severity
+  (warning vs error); nothing else new.
+
+Consumers remain out of scope.
 
 ## Phase E — Future consumers (only when Core is ready and needed)
 

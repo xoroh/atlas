@@ -1,0 +1,4 @@
+# CRLF line endings are significant to this fixture. Git must not convert
+# them: the engine test asserts the stored file contains carriage returns
+# and that parsed bodies are normalized to LF.
+realistic/getting-started.md -text

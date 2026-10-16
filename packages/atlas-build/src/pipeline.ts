@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { loadConfig } from "@xoroh/atlas-core";
 import type { AtlasDiagnostic, AtlasDocument } from "@xoroh/atlas-core";
 import { loadDocuments } from "@xoroh/atlas-content";
@@ -39,15 +39,22 @@ export interface WrittenOutputs {
 /**
  * Write generated outputs to `outDir` (`manifest.json`, `llms.txt`,
  * one Markdown file per document). Returns written output-relative paths.
+ * Refuses to write outside `outDir`: a page path escaping the output root
+ * (absolute path or `..` traversal) throws instead of writing elsewhere.
  */
 export function writeOutputs(outDir: string, outputs: GeneratedOutputs): WrittenOutputs {
-  mkdirSync(outDir, { recursive: true });
+  const root = resolve(outDir);
+  mkdirSync(root, { recursive: true });
   const manifest = "manifest.json";
   const llmsTxt = "llms.txt";
-  writeFileSync(join(outDir, manifest), outputs.manifest);
-  writeFileSync(join(outDir, llmsTxt), outputs.llmsTxt);
+  writeFileSync(join(root, manifest), outputs.manifest);
+  writeFileSync(join(root, llmsTxt), outputs.llmsTxt);
   const pages = outputs.pages.map((page) => {
-    const target = join(outDir, page.path);
+    const target = resolve(root, page.path);
+    const rel = relative(root, target);
+    if (rel === "" || rel.startsWith("..") || isAbsolute(rel)) {
+      throw new Error(`Refusing to write outside output directory: ${page.path}`);
+    }
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, page.markdown);
     return page.path;
