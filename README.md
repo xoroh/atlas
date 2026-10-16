@@ -1,20 +1,20 @@
 # Atlas
 
-Atlas is Xoroh's open-source documentation project, organized as a Bun workspace monorepo.
+Atlas is Xoroh's open-source documentation engine, organized as a Bun workspace monorepo.
 
-> **Status:** Migration in preparation. `apps/docs` is currently a working
-> Astro + Starlight documentation site (legacy implementation, preserved
-> until cutover); the approved target is TanStack Start. Reusable engine
-> extraction (`packages/`) waits for a second consumer. See
-> `docs/adr/0002-tanstack-foundation.md` for the approved architecture,
-> `docs/adr/0001-atlas-foundation.md` for the corrected history, and
-> `docs/migration-plan.md` for the migration sequence and acceptance gates.
+> **Status:** Core-first implementation. `packages/atlas-core`,
+> `packages/atlas-content`, and `packages/atlas-build` form a tested
+> configuration-to-output engine with no website dependency. A documentation
+> site is a future consumer, not the foundation. See
+> `docs/adr/0003-atlas-core-first.md` for the approved architecture and
+> `docs/roadmap.md` for the incremental plan (phases A–E).
 
 ## Workspace layout
 
-- `apps/docs/` — the Xoroh Atlas documentation site (TanStack Start target;
-  Astro + Starlight legacy implementation pending migration)
-- `packages/*` — future shared documentation tooling or components
+- `packages/atlas-core` — contracts: configuration, document model, types, diagnostics
+- `packages/atlas-content` — Markdown discovery, parsing, validation, normalized documents
+- `packages/atlas-build` — pipeline orchestration and deterministic output generation
+- `apps/*` — reserved for future consumer applications (none exist yet)
 
 ## Development
 
@@ -24,7 +24,6 @@ Requirements: Bun 1.4.2 or newer.
 bun install --frozen-lockfile
 bun test
 bun run check
-bun run build
 ```
 
 ## Community

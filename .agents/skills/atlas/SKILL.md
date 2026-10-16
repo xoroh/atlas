@@ -1,61 +1,59 @@
 ---
 name: atlas
-description: Govern work in the xoroh/atlas documentation platform. Use for any Atlas task: TanStack Start site development, content authoring, validation, and releases. Stops before publication, deployment, merges, and cross-repository actions.
+description: Govern work in the xoroh/atlas documentation engine. Use for any Atlas task: engine package development, content-pipeline work, validation, and releases. Stops before publication, deployment, merges, and cross-repository actions.
 ---
 
 # atlas skill
 
-Atlas (`xoroh/atlas`) is the reusable documentation engine and platform for
-the Xoroh ecosystem. It powers documentation sites — including the Xoroh
-Atlas site in `apps/docs` — without absorbing other projects' documentation
-identity. Kern keeps its own docs; future consumers keep theirs.
+Atlas (`xoroh/atlas`) is the Xoroh documentation **engine**: validated
+documents and deterministic generated outputs that future consumers
+(sites, CLIs, agents) build on. There is no website in this repository;
+a site is a future consumer project, not the foundation (see
+`docs/adr/0003-atlas-core-first.md`).
 
-## Architecture (see `docs/adr/0002-tanstack-foundation.md`; ADR-0001 §D3 withdrawn)
+## Architecture (see `docs/adr/0003-atlas-core-first.md`)
 
-- `apps/docs` — the Xoroh Atlas documentation site on **TanStack Start**:
-  file-based routes plus Atlas-owned MDX content pipeline (inventory,
-  frontmatter schema, navigation). Engine concerns stay separable for
-  future extraction into `packages/atlas-engine`; sites never patch
-  engine internals — configuration and plugins are the only seam.
-- Legacy: an Astro + Starlight implementation of `apps/docs` is still
-  present and is preserved byte-identical until the TanStack replacement
-  passes every acceptance gate in `docs/migration-plan.md`. Do not extend
-  it, add Starlight conventions to new work, or copy its patterns into the
-  new app — its five MDX pages are content to rewrite, not conventions to
-  keep.
-- `packages/` — reserved for distributable documentation tooling with its own
-  release policy. Nothing lives here until a real consumer needs it (no new
-  packages for v1).
-- No `libs/` — there is no internal shared-library need yet; introduce it
-  only when two consumers share non-distributable code.
+- `packages/atlas-core` — contracts only: configuration model, document
+  model, public types, diagnostics. Zero runtime dependencies.
+- `packages/atlas-content` — file discovery, Markdown+frontmatter parsing,
+  metadata validation, normalized `AtlasDocument`s. Depends on core only
+  (+ its frontmatter library).
+- `packages/atlas-build` — pipeline orchestration
+  (`buildAtlas`: config → documents → outputs) and deterministic
+  generation (`manifest.json`, `llms.txt`, per-page Markdown) plus file
+  writers. Depends on core and content.
+- Dependency direction flows toward `atlas-core` only; no cycles. Engine
+  packages never import Astro, Starlight, TanStack Start, React, or any
+  rendering framework — enforced by `tests/monorepo.test.ts`.
+- `packages/` gains a new member only for a demonstrated responsibility
+  with an explicit contract — never for diagram symmetry or hypothetical
+  integrations. No MDX/search/theme/site packages exist; each needs a real
+  requirement first.
+- `apps/` is reserved for future consumer applications. None exist now;
+  do not create a website, a replacement site, or a temporary second site.
 
 ## Development workflow
 
 - Toolchain: Bun >=1.4.2. Install: `bun install --frozen-lockfile`.
-- Target validation (TanStack app, once scaffolded): `bun test`, type-check
-  and production build per `apps/docs/package.json` scripts; production
-  build must emit self-contained static output (no Atlas backend required)
-  per `docs/migration-plan.md` acceptance gates.
-- Legacy validation (Astro app, until cutover): `bun test`,
-  `bun run check` (Astro check), `bun run build` (production build from
-  `apps/docs`). These commands validate the old implementation only.
-- Content: file-based MDX under the Atlas frontmatter schema (required
-  `title`, `description`); navigation owned by Atlas configuration, not
-  framework conventions.
-- URL reservations: `/v/{version}` and `/{locale}/` prefixes are reserved;
-  do not implement versioning or i18n content yet.
-- AI surfaces: generated static `llms.txt`, per-page Markdown, and
-  `manifest.json`; MCP/CLI deferred.
+- Validate: `bun test` (unit + lifecycle integration + workspace boundary
+  tests), `bun run check` (strict typecheck of engine packages and root
+  tests) — exactly as CI does.
+- Content format: Markdown with YAML frontmatter (`.md`) validated
+  against the Atlas schema (required `title`, `description`). MDX stays a
+  future adapter until justified; do not add it speculatively.
+- Fixtures live in `packages/atlas-content/fixtures/`; keep them small and
+  purpose-built. One bad file must never hide another — collect
+  diagnostics, don't throw past them.
+- gray-matter is called with explicit options (never bare) to bypass its
+  input cache; see `packages/atlas-content/src/parse.ts` and `vendor.d.ts`.
 - Dependencies: each addition needs a named concrete requirement and must
-  satisfy `docs/adr/0002-tanstack-foundation.md` §10 (static-output
-  compatible, maintained, MIT-compatible, minimal transitive weight).
-  Verify framework behavior against installed-version schemas, never from
-  memory or third-party guides.
+  satisfy `docs/adr/0003-atlas-core-first.md` §4. Verify library behavior
+  against installed-version code, never from memory or third-party guides.
 - Never reference Fumadocs in product-facing architecture documentation.
 
 ## Validation and project-specific requirements
 
-- CI runs frozen install, tests, type-check, and production build with
+- CI runs frozen install, engine tests, and strict typecheck with
   least-privilege permissions and pinned actions.
 - Changesets govern versioning; releases are manual with explicit human
   approval (`docs/RELEASING.md`). Never publish from CI.

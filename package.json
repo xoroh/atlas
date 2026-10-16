@@ -15,7 +15,7 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "test": "bun test",
-    "check": "bun run --filter '@xoroh/*' check"
+    "check": "bun run --filter '@xoroh/*' check && tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.3",

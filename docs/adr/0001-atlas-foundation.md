@@ -1,7 +1,7 @@
 # ADR-001: Atlas initial platform direction
 
-- Status: partially superseded (see Correction below; framework choice
-  withdrawn by ADR-0002)
+- Status: partially superseded (D3 withdrawn by ADR-0002, confirmed by
+  ADR-0003; see Correction below)
 - Date: 2026-10-16
 - Deciders: implementation task for `xoroh/atlas` Phase 0–1 (owner direction
   from the readiness audit; framework choice evidence-backed by spike below).
@@ -16,9 +16,11 @@ use TanStack Start instead. The historical record is preserved unchanged;
 only its standing is corrected:
 
 - **D3 (Framework: Astro + Starlight) is withdrawn** and superseded by
-  [ADR-0002](0002-tanstack-foundation.md). The spike evidence in D3 remains
-  valid as a measurement of the Astro/Starlight implementation, not as a
-  justification for keeping it.
+  [ADR-0002](0002-tanstack-foundation.md), confirmed by
+  [ADR-0003](0003-atlas-core-first.md) (website program superseded before
+  implementation; engine packages are the product). The spike evidence in
+  D3 remains valid as a measurement of the Astro/Starlight implementation,
+  not as a justification for keeping it.
 - **D1 (engine/site boundary, deferred extraction), D2 (file-based MDX
   in-repo), D4 (`/v/{version}` and locale URL reservations), and D5 (static
   AI surfaces first; MCP/CLI deferred) remain valid** and are carried forward
